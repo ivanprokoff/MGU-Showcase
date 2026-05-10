@@ -5,18 +5,26 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import type {
+  MutationFunction,
   QueryFunction,
   QueryKey,
+  UseMutationOptions,
+  UseMutationResult,
   UseQueryOptions,
   UseQueryResult,
 } from "@tanstack/react-query";
 
-import type { HealthStatus } from "./api.schemas";
+import type {
+  HealthStatus,
+  Widget,
+  WidgetInput,
+  WidgetUpdate,
+} from "./api.schemas";
 
 import { customFetch } from "../custom-fetch";
-import type { ErrorType } from "../custom-fetch";
+import type { ErrorType, BodyType } from "../custom-fetch";
 
 type AwaitedInput<T> = PromiseLike<T> | T;
 
@@ -99,3 +107,418 @@ export function useHealthCheck<
 
   return { ...query, queryKey: queryOptions.queryKey };
 }
+
+/**
+ * @summary List all widgets
+ */
+export const getListWidgetsUrl = () => {
+  return `/api/widgets`;
+};
+
+export const listWidgets = async (options?: RequestInit): Promise<Widget[]> => {
+  return customFetch<Widget[]>(getListWidgetsUrl(), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getListWidgetsQueryKey = () => {
+  return [`/api/widgets`] as const;
+};
+
+export const getListWidgetsQueryOptions = <
+  TData = Awaited<ReturnType<typeof listWidgets>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof listWidgets>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getListWidgetsQueryKey();
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof listWidgets>>> = ({
+    signal,
+  }) => listWidgets({ signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof listWidgets>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type ListWidgetsQueryResult = NonNullable<
+  Awaited<ReturnType<typeof listWidgets>>
+>;
+export type ListWidgetsQueryError = ErrorType<unknown>;
+
+/**
+ * @summary List all widgets
+ */
+
+export function useListWidgets<
+  TData = Awaited<ReturnType<typeof listWidgets>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof listWidgets>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getListWidgetsQueryOptions(options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * @summary Create a widget
+ */
+export const getCreateWidgetUrl = () => {
+  return `/api/widgets`;
+};
+
+export const createWidget = async (
+  widgetInput: WidgetInput,
+  options?: RequestInit,
+): Promise<Widget> => {
+  return customFetch<Widget>(getCreateWidgetUrl(), {
+    ...options,
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(widgetInput),
+  });
+};
+
+export const getCreateWidgetMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof createWidget>>,
+    TError,
+    { data: BodyType<WidgetInput> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof createWidget>>,
+  TError,
+  { data: BodyType<WidgetInput> },
+  TContext
+> => {
+  const mutationKey = ["createWidget"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof createWidget>>,
+    { data: BodyType<WidgetInput> }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return createWidget(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type CreateWidgetMutationResult = NonNullable<
+  Awaited<ReturnType<typeof createWidget>>
+>;
+export type CreateWidgetMutationBody = BodyType<WidgetInput>;
+export type CreateWidgetMutationError = ErrorType<unknown>;
+
+/**
+ * @summary Create a widget
+ */
+export const useCreateWidget = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof createWidget>>,
+    TError,
+    { data: BodyType<WidgetInput> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof createWidget>>,
+  TError,
+  { data: BodyType<WidgetInput> },
+  TContext
+> => {
+  return useMutation(getCreateWidgetMutationOptions(options));
+};
+
+/**
+ * @summary Get a widget by id
+ */
+export const getGetWidgetUrl = (id: number) => {
+  return `/api/widgets/${id}`;
+};
+
+export const getWidget = async (
+  id: number,
+  options?: RequestInit,
+): Promise<Widget> => {
+  return customFetch<Widget>(getGetWidgetUrl(id), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getGetWidgetQueryKey = (id: number) => {
+  return [`/api/widgets/${id}`] as const;
+};
+
+export const getGetWidgetQueryOptions = <
+  TData = Awaited<ReturnType<typeof getWidget>>,
+  TError = ErrorType<void>,
+>(
+  id: number,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof getWidget>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getGetWidgetQueryKey(id);
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getWidget>>> = ({
+    signal,
+  }) => getWidget(id, { signal, ...requestOptions });
+
+  return {
+    queryKey,
+    queryFn,
+    enabled: !!id,
+    ...queryOptions,
+  } as UseQueryOptions<Awaited<ReturnType<typeof getWidget>>, TError, TData> & {
+    queryKey: QueryKey;
+  };
+};
+
+export type GetWidgetQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getWidget>>
+>;
+export type GetWidgetQueryError = ErrorType<void>;
+
+/**
+ * @summary Get a widget by id
+ */
+
+export function useGetWidget<
+  TData = Awaited<ReturnType<typeof getWidget>>,
+  TError = ErrorType<void>,
+>(
+  id: number,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof getWidget>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getGetWidgetQueryOptions(id, options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * @summary Update a widget
+ */
+export const getUpdateWidgetUrl = (id: number) => {
+  return `/api/widgets/${id}`;
+};
+
+export const updateWidget = async (
+  id: number,
+  widgetUpdate: WidgetUpdate,
+  options?: RequestInit,
+): Promise<Widget> => {
+  return customFetch<Widget>(getUpdateWidgetUrl(id), {
+    ...options,
+    method: "PUT",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(widgetUpdate),
+  });
+};
+
+export const getUpdateWidgetMutationOptions = <
+  TError = ErrorType<void>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof updateWidget>>,
+    TError,
+    { id: number; data: BodyType<WidgetUpdate> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof updateWidget>>,
+  TError,
+  { id: number; data: BodyType<WidgetUpdate> },
+  TContext
+> => {
+  const mutationKey = ["updateWidget"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof updateWidget>>,
+    { id: number; data: BodyType<WidgetUpdate> }
+  > = (props) => {
+    const { id, data } = props ?? {};
+
+    return updateWidget(id, data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type UpdateWidgetMutationResult = NonNullable<
+  Awaited<ReturnType<typeof updateWidget>>
+>;
+export type UpdateWidgetMutationBody = BodyType<WidgetUpdate>;
+export type UpdateWidgetMutationError = ErrorType<void>;
+
+/**
+ * @summary Update a widget
+ */
+export const useUpdateWidget = <
+  TError = ErrorType<void>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof updateWidget>>,
+    TError,
+    { id: number; data: BodyType<WidgetUpdate> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof updateWidget>>,
+  TError,
+  { id: number; data: BodyType<WidgetUpdate> },
+  TContext
+> => {
+  return useMutation(getUpdateWidgetMutationOptions(options));
+};
+
+/**
+ * @summary Delete a widget
+ */
+export const getDeleteWidgetUrl = (id: number) => {
+  return `/api/widgets/${id}`;
+};
+
+export const deleteWidget = async (
+  id: number,
+  options?: RequestInit,
+): Promise<void> => {
+  return customFetch<void>(getDeleteWidgetUrl(id), {
+    ...options,
+    method: "DELETE",
+  });
+};
+
+export const getDeleteWidgetMutationOptions = <
+  TError = ErrorType<void>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof deleteWidget>>,
+    TError,
+    { id: number },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof deleteWidget>>,
+  TError,
+  { id: number },
+  TContext
+> => {
+  const mutationKey = ["deleteWidget"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof deleteWidget>>,
+    { id: number }
+  > = (props) => {
+    const { id } = props ?? {};
+
+    return deleteWidget(id, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type DeleteWidgetMutationResult = NonNullable<
+  Awaited<ReturnType<typeof deleteWidget>>
+>;
+
+export type DeleteWidgetMutationError = ErrorType<void>;
+
+/**
+ * @summary Delete a widget
+ */
+export const useDeleteWidget = <
+  TError = ErrorType<void>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof deleteWidget>>,
+    TError,
+    { id: number },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof deleteWidget>>,
+  TError,
+  { id: number },
+  TContext
+> => {
+  return useMutation(getDeleteWidgetMutationOptions(options));
+};

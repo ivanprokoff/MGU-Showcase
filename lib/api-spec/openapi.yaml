@@ -10,6 +10,8 @@ servers:
 tags:
   - name: health
     description: Health operations
+  - name: widgets
+    description: Widget operations
 paths:
   /healthz:
     get:
@@ -24,6 +26,97 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+  /widgets:
+    get:
+      operationId: listWidgets
+      tags: [widgets]
+      summary: List all widgets
+      responses:
+        "200":
+          description: List of widgets
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Widget"
+    post:
+      operationId: createWidget
+      tags: [widgets]
+      summary: Create a widget
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/WidgetInput"
+      responses:
+        "201":
+          description: Created widget
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Widget"
+  /widgets/{id}:
+    get:
+      operationId: getWidget
+      tags: [widgets]
+      summary: Get a widget by id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Widget
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Widget"
+        "404":
+          description: Not found
+    put:
+      operationId: updateWidget
+      tags: [widgets]
+      summary: Update a widget
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/WidgetUpdate"
+      responses:
+        "200":
+          description: Updated widget
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Widget"
+        "404":
+          description: Not found
+    delete:
+      operationId: deleteWidget
+      tags: [widgets]
+      summary: Delete a widget
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+        "404":
+          description: Not found
 components:
   schemas:
     HealthStatus:
@@ -33,4 +126,61 @@ components:
           type: string
       required:
         - status
-
+    Widget:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        url:
+          type: string
+        description:
+          type: string
+        icon:
+          type: string
+        order:
+          type: integer
+        pinned:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - title
+        - url
+        - order
+        - pinned
+        - createdAt
+    WidgetInput:
+      type: object
+      properties:
+        title:
+          type: string
+        url:
+          type: string
+        description:
+          type: string
+        icon:
+          type: string
+        order:
+          type: integer
+      required:
+        - title
+        - url
+    WidgetUpdate:
+      type: object
+      properties:
+        title:
+          type: string
+        url:
+          type: string
+        description:
+          type: string
+        icon:
+          type: string
+        order:
+          type: integer
+        pinned:
+          type: boolean

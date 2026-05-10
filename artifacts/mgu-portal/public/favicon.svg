@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="80" fill="#1e3a5f"/>
+  <rect x="210" y="180" width="92" height="230" fill="#f5e6c8"/>
+  <rect x="228" y="130" width="56" height="60" fill="#f5e6c8"/>
+  <polygon points="256,58 238,133 274,133" fill="#d4a843"/>
+  <polygon points="256,52 259,63 270,63 261,70 264,81 256,74 248,81 251,70 242,63 253,63" fill="#d4a843"/>
+  <rect x="118" y="252" width="90" height="158" fill="#f5e6c8"/>
+  <rect x="304" y="252" width="90" height="158" fill="#f5e6c8"/>
+  <rect x="125" y="218" width="28" height="44" fill="#f5e6c8"/>
+  <polygon points="139,194 124,222 154,222" fill="#d4a843"/>
+  <rect x="359" y="218" width="28" height="44" fill="#f5e6c8"/>
+  <polygon points="373,194 358,222 388,222" fill="#d4a843"/>
+  <rect x="225" y="196" width="16" height="20" rx="2" fill="#1e3a5f"/>
+  <rect x="248" y="196" width="16" height="20" rx="2" fill="#1e3a5f"/>
+  <rect x="271" y="196" width="16" height="20" rx="2" fill="#1e3a5f"/>
+  <rect x="225" y="226" width="16" height="20" rx="2" fill="#1e3a5f"/>
+  <rect x="248" y="226" width="16" height="20" rx="2" fill="#1e3a5f"/>
+  <rect x="271" y="226" width="16" height="20" rx="2" fill="#1e3a5f"/>
+  <rect x="238" y="358" width="36" height="52" rx="4" fill="#1e3a5f"/>
+  <rect x="78" y="410" width="356" height="10" rx="3" fill="#d4a843" opacity="0.7"/>
+</svg>

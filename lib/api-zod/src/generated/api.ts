@@ -14,3 +14,81 @@ import * as zod from "zod";
 export const HealthCheckResponse = zod.object({
   status: zod.string(),
 });
+
+/**
+ * @summary List all widgets
+ */
+export const ListWidgetsResponseItem = zod.object({
+  id: zod.number(),
+  title: zod.string(),
+  url: zod.string(),
+  description: zod.string().optional(),
+  icon: zod.string().optional(),
+  order: zod.number(),
+  pinned: zod.boolean(),
+  createdAt: zod.coerce.date(),
+});
+export const ListWidgetsResponse = zod.array(ListWidgetsResponseItem);
+
+/**
+ * @summary Create a widget
+ */
+export const CreateWidgetBody = zod.object({
+  title: zod.string(),
+  url: zod.string(),
+  description: zod.string().optional(),
+  icon: zod.string().optional(),
+  order: zod.number().optional(),
+});
+
+/**
+ * @summary Get a widget by id
+ */
+export const GetWidgetParams = zod.object({
+  id: zod.coerce.number(),
+});
+
+export const GetWidgetResponse = zod.object({
+  id: zod.number(),
+  title: zod.string(),
+  url: zod.string(),
+  description: zod.string().optional(),
+  icon: zod.string().optional(),
+  order: zod.number(),
+  pinned: zod.boolean(),
+  createdAt: zod.coerce.date(),
+});
+
+/**
+ * @summary Update a widget
+ */
+export const UpdateWidgetParams = zod.object({
+  id: zod.coerce.number(),
+});
+
+export const UpdateWidgetBody = zod.object({
+  title: zod.string().optional(),
+  url: zod.string().optional(),
+  description: zod.string().optional(),
+  icon: zod.string().optional(),
+  order: zod.number().optional(),
+  pinned: zod.boolean().optional(),
+});
+
+export const UpdateWidgetResponse = zod.object({
+  id: zod.number(),
+  title: zod.string(),
+  url: zod.string(),
+  description: zod.string().optional(),
+  icon: zod.string().optional(),
+  order: zod.number(),
+  pinned: zod.boolean(),
+  createdAt: zod.coerce.date(),
+});
+
+/**
+ * @summary Delete a widget
+ */
+export const DeleteWidgetParams = zod.object({
+  id: zod.coerce.number(),
+});

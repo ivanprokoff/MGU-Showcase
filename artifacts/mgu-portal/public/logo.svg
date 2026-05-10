@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 40" fill="none">
+  <rect width="120" height="40" rx="8" fill="#1e3a5f"/>
+  <text x="10" y="26" font-family="Georgia, serif" font-size="16" font-weight="bold" fill="white">МГУ</text>
+  <line x1="42" y1="8" x2="42" y2="32" stroke="#4a90a4" stroke-width="1.5"/>
+  <text x="48" y="18" font-family="system-ui, sans-serif" font-size="7" fill="#a0c4d8">Единый портал</text>
+  <text x="48" y="28" font-family="system-ui, sans-serif" font-size="7" fill="#a0c4d8">студенческих услуг</text>
+</svg>

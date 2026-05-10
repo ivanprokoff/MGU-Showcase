@@ -7,3 +7,6 @@
  */
 
 export * from "./healthStatus";
+export * from "./widget";
+export * from "./widgetInput";
+export * from "./widgetUpdate";

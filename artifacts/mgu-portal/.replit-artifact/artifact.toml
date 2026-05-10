@@ -1,0 +1,31 @@
+kind = "web"
+previewPath = "/"
+title = "Витрина услуг МГУ"
+version = "1.0.0"
+id = "artifacts/mgu-portal"
+router = "path"
+
+[[integratedSkills]]
+name = "react-vite"
+version = "1.0.0"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 20127
+
+[services.development]
+run = "pnpm --filter @workspace/mgu-portal run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/mgu-portal", "run", "build" ]
+publicDir = "artifacts/mgu-portal/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "20127"
+BASE_PATH = "/"

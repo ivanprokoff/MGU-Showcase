@@ -8,3 +8,31 @@
 export interface HealthStatus {
   status: string;
 }
+
+export interface Widget {
+  id: number;
+  title: string;
+  url: string;
+  description?: string;
+  icon?: string;
+  order: number;
+  pinned: boolean;
+  createdAt: string;
+}
+
+export interface WidgetInput {
+  title: string;
+  url: string;
+  description?: string;
+  icon?: string;
+  order?: number;
+}
+
+export interface WidgetUpdate {
+  title?: string;
+  url?: string;
+  description?: string;
+  icon?: string;
+  order?: number;
+  pinned?: boolean;
+}
