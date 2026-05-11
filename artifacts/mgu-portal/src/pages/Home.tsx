@@ -140,8 +140,8 @@ function SortableWidgetCard({ widget, dragOccurred, onEdit, onDelete, onPin }: S
             <span className="sr-only">{widget.pinned ? "Открепить" : "Закрепить"}</span>
           </Button>
 
-          <CardContent className="p-4 sm:p-6">
-            <div className="flex gap-3 sm:gap-4">
+          <CardContent className="p-4 sm:p-6 h-full flex items-center">
+            <div className="flex gap-3 sm:gap-4 items-center w-full">
               <div className="flex-shrink-0 w-11 h-11 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-primary/10 flex items-center justify-center text-2xl sm:text-3xl shadow-inner group-hover:bg-primary/20 transition-colors">
                 {widget.icon ? (
                   <span>{widget.icon}</span>
