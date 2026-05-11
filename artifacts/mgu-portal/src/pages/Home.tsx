@@ -113,43 +113,35 @@ function SortableWidgetCard({ widget, dragOccurred, onEdit, onDelete, onPin }: S
         className="block cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-xl sm:rounded-2xl"
       >
         <Card className="rounded-xl sm:rounded-2xl border border-border/50 shadow-sm hover:shadow-md hover:border-primary/30 transition-all duration-300 h-28 sm:h-32 bg-card/80 backdrop-blur-sm hover:-translate-y-1 relative overflow-hidden">
-          {/* Drag handle */}
+          {/* Drag handle — hidden visually, functionality preserved */}
           <div
             {...attributes}
             {...listeners}
             onClick={(e) => e.preventDefault()}
-            className="absolute top-2 left-2 sm:top-3 sm:left-3 z-10
-              opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity
-              cursor-grab active:cursor-grabbing touch-none
-              text-muted-foreground/50 hover:text-muted-foreground
-              p-1 rounded"
+            className="sr-only"
           >
             <GripVertical className="h-4 w-4" />
           </div>
 
-          {/* Action buttons */}
-          <div className="absolute top-2 right-2 sm:top-3 sm:right-3 flex gap-1 z-10
-            opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity
-            bg-background/80 backdrop-blur rounded-lg p-0.5 sm:p-1 shadow-sm">
-            <Button
-              size="icon"
-              variant="ghost"
-              data-testid={`button-pin-widget-${widget.id}`}
-              className={`h-8 w-8 active:scale-90 ${widget.pinned ? "text-amber-500 hover:text-amber-600" : "text-muted-foreground hover:text-amber-500"}`}
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                onPin(widget);
-              }}
-              title={widget.pinned ? "Открепить" : "Закрепить"}
-            >
-              {widget.pinned ? <PinOff className="h-3.5 w-3.5 sm:h-4 sm:w-4" /> : <Pin className="h-3.5 w-3.5 sm:h-4 sm:w-4" />}
-              <span className="sr-only">{widget.pinned ? "Открепить" : "Закрепить"}</span>
-            </Button>
-          </div>
+          {/* Pin button — hidden visually, functionality preserved */}
+          <Button
+            size="icon"
+            variant="ghost"
+            data-testid={`button-pin-widget-${widget.id}`}
+            className="sr-only"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              onPin(widget);
+            }}
+            title={widget.pinned ? "Открепить" : "Закрепить"}
+          >
+            {widget.pinned ? <PinOff className="h-3.5 w-3.5 sm:h-4 sm:w-4" /> : <Pin className="h-3.5 w-3.5 sm:h-4 sm:w-4" />}
+            <span className="sr-only">{widget.pinned ? "Открепить" : "Закрепить"}</span>
+          </Button>
 
           <CardContent className="p-4 sm:p-6">
-            <div className="flex gap-3 sm:gap-4 pr-16 sm:pr-0 pl-4 sm:pl-0">
+            <div className="flex gap-3 sm:gap-4">
               <div className="flex-shrink-0 w-11 h-11 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-primary/10 flex items-center justify-center text-2xl sm:text-3xl shadow-inner group-hover:bg-primary/20 transition-colors">
                 {widget.icon ? (
                   <span>{widget.icon}</span>
