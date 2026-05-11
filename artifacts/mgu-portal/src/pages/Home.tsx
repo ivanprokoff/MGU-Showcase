@@ -112,7 +112,7 @@ function SortableWidgetCard({ widget, dragOccurred, onEdit, onDelete, onPin }: S
         onKeyDown={(e) => e.key === "Enter" && handleCardClick()}
         className="block cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-xl sm:rounded-2xl"
       >
-        <Card className="rounded-xl sm:rounded-2xl border border-border/50 shadow-sm hover:shadow-md hover:border-primary/30 transition-all duration-300 h-28 sm:h-32 bg-card/80 backdrop-blur-sm hover:-translate-y-1 relative overflow-hidden">
+        <Card className="rounded-xl sm:rounded-2xl border border-border/50 shadow-sm hover:shadow-md hover:border-primary/30 transition-all duration-300 h-28 sm:h-32 bg-card/80 backdrop-blur-sm hover:-translate-y-1 relative overflow-hidden flex flex-col">
           {/* Drag handle — hidden visually, functionality preserved */}
           <div
             {...attributes}
@@ -140,7 +140,7 @@ function SortableWidgetCard({ widget, dragOccurred, onEdit, onDelete, onPin }: S
             <span className="sr-only">{widget.pinned ? "Открепить" : "Закрепить"}</span>
           </Button>
 
-          <CardContent className="p-4 sm:p-6 h-full flex items-center">
+          <CardContent className="p-4 sm:p-6 flex-1 flex items-center">
             <div className="flex gap-3 sm:gap-4 items-center w-full">
               <div className="flex-shrink-0 w-11 h-11 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-primary/10 flex items-center justify-center text-2xl sm:text-3xl shadow-inner group-hover:bg-primary/20 transition-colors">
                 {widget.icon ? (
