@@ -15,7 +15,10 @@ export function usePWAInstall() {
       setInstallPrompt(e as BeforeInstallPromptEvent);
     };
 
-    const installedHandler = () => setIsInstalled(true);
+    const installedHandler = () => {
+      fetch("https://sp.osk.msu.ru/?event=install&q=pwa", { keepalive: true, mode: "no-cors" }).catch(() => {});
+      setIsInstalled(true);
+    };
 
     window.addEventListener("beforeinstallprompt", handler);
     window.addEventListener("appinstalled", installedHandler);
@@ -35,7 +38,7 @@ export function usePWAInstall() {
     await installPrompt.prompt();
     const { outcome } = await installPrompt.userChoice;
     if (outcome === "accepted") {
-      fetch("https://sp.osk.msu.ru/?event=search&q=test", { keepalive: true }).catch(() => {});
+      fetch("https://sp.osk.msu.ru/?event=install&q=pwa", { keepalive: true, mode: "no-cors" }).catch(() => {});
       setInstallPrompt(null);
       setIsInstalled(true);
     }
