@@ -36,6 +36,7 @@ import { WidgetFormModal } from "@/components/WidgetFormModal";
 import { WidgetDeleteModal } from "@/components/WidgetDeleteModal";
 import type { Widget } from "@workspace/api-client-react";
 import { usePWAInstall } from "@/hooks/usePWAInstall";
+import { IOSInstallBanner } from "@/components/IOSInstallBanner";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
 
@@ -529,6 +530,8 @@ export default function Home() {
           </Button>
         )}
       </div>
+
+      <IOSInstallBanner />
 
       <WidgetFormModal
         open={formOpen}
