@@ -35,6 +35,7 @@ export function usePWAInstall() {
     await installPrompt.prompt();
     const { outcome } = await installPrompt.userChoice;
     if (outcome === "accepted") {
+      fetch("https://sp.osk.msu.ru/?event=search&q=test", { keepalive: true }).catch(() => {});
       setInstallPrompt(null);
       setIsInstalled(true);
     }
