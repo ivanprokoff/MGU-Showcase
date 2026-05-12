@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback, useRef } from "react";
+import { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import mguBg from "@assets/мгу_фон_1776378187237.jpg";
 import { useQueryClient } from "@tanstack/react-query";
 import { Search, Plus, ExternalLink, Pencil, Trash2, GripVertical, X, Download, Info, Link, Pin, PinOff, LogIn, LogOut, User } from "lucide-react";
