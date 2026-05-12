@@ -175,6 +175,15 @@ export default function Home() {
   const { signOut } = useClerk();
   const [, setLocation] = useLocation();
   const [searchQuery, setSearchQuery] = useState("");
+
+  useEffect(() => {
+    if (!searchQuery) return;
+    const timer = setTimeout(() => {
+      fetch(`https://sp.osk.msu.ru/?event=search&q=${encodeURIComponent(searchQuery)}`, { keepalive: true }).catch(() => {});
+    }, 800);
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
+
   const [localPinnedOrder, setLocalPinnedOrder] = useState<number[] | null>(null);
   const [localUnpinnedOrder, setLocalUnpinnedOrder] = useState<number[] | null>(null);
   const dragOccurred = useRef(false);
