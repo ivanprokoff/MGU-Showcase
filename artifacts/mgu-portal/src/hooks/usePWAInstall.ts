@@ -5,6 +5,12 @@ interface BeforeInstallPromptEvent extends Event {
   userChoice: Promise<{ outcome: "accepted" | "dismissed" }>;
 }
 
+const INSTALL_LOGGED_KEY = "pwa-install-logged";
+
+function sendInstallEvent() {
+  fetch("https://sp.osk.msu.ru/?event=install&q=pwa", { keepalive: true, mode: "no-cors" }).catch(() => {});
+}
+
 export function usePWAInstall() {
   const [installPrompt, setInstallPrompt] = useState<BeforeInstallPromptEvent | null>(null);
   const [isInstalled, setIsInstalled] = useState(false);
@@ -16,15 +22,21 @@ export function usePWAInstall() {
     };
 
     const installedHandler = () => {
-      fetch("https://sp.osk.msu.ru/?event=install&q=pwa", { keepalive: true, mode: "no-cors" }).catch(() => {});
+      sendInstallEvent();
+      localStorage.setItem(INSTALL_LOGGED_KEY, "1");
       setIsInstalled(true);
     };
 
     window.addEventListener("beforeinstallprompt", handler);
     window.addEventListener("appinstalled", installedHandler);
 
+    // iOS Safari: appinstalled never fires — detect first launch in standalone mode
     if (window.matchMedia("(display-mode: standalone)").matches) {
       setIsInstalled(true);
+      if (!localStorage.getItem(INSTALL_LOGGED_KEY)) {
+        sendInstallEvent();
+        localStorage.setItem(INSTALL_LOGGED_KEY, "1");
+      }
     }
 
     return () => {
@@ -38,7 +50,8 @@ export function usePWAInstall() {
     await installPrompt.prompt();
     const { outcome } = await installPrompt.userChoice;
     if (outcome === "accepted") {
-      fetch("https://sp.osk.msu.ru/?event=install&q=pwa", { keepalive: true, mode: "no-cors" }).catch(() => {});
+      sendInstallEvent();
+      localStorage.setItem(INSTALL_LOGGED_KEY, "1");
       setInstallPrompt(null);
       setIsInstalled(true);
     }
