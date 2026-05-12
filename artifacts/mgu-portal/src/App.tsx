@@ -130,7 +130,7 @@ function ClerkProviderWithRoutes() {
       localization={{
         signIn: {
           start: {
-            title: "Вход в Портал МГУ",
+            title: "Вход в Витрину МГУ",
             subtitle: "Введите данные для входа",
           },
         },
