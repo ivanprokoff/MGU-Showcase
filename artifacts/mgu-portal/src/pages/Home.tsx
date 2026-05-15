@@ -529,6 +529,16 @@ export default function Home() {
         </div>
       </main>
 
+      <footer className="border-t py-6 text-center text-sm text-muted-foreground">
+        <p>Связаться с нами:</p>
+        <a
+          href="mailto:it.osk.msu@my.msu.ru"
+          className="font-medium text-foreground hover:underline"
+        >
+          it.osk.msu@my.msu.ru
+        </a>
+      </footer>
+
       {/* Floating buttons — mobile only */}
       <div className="fixed bottom-5 right-4 sm:hidden z-30 flex flex-col gap-3 items-end">
         {canInstall && (
