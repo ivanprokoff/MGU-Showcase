@@ -514,6 +514,19 @@ export default function Home() {
             )}
           </div>
         )}
+
+        <div className="flex justify-center py-8">
+          <a
+            href="https://forms.yandex.ru/cloud/6a06751c02848f16de563efe"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Button variant="outline" className="gap-2 text-muted-foreground hover:text-foreground">
+              <Plus className="h-4 w-4" />
+              Хочу добавить услугу
+            </Button>
+          </a>
+        </div>
       </main>
 
       {/* Floating buttons — mobile only */}
