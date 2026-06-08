@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { ClerkProvider, SignIn, useClerk } from "@clerk/react";
+import { ClerkProvider, SignIn, SignUp, ClerkLoading, ClerkLoaded, useClerk } from "@clerk/react";
 import { publishableKeyFromHost } from "@clerk/react/internal";
 import { shadcn } from "@clerk/themes";
 import { Switch, Route, useLocation, Router as WouterRouter } from "wouter";
@@ -98,7 +98,7 @@ function ClerkQueryClientCacheInvalidator() {
   return null;
 }
 
-function SignInPage() {
+function AuthPageShell({ children }: { children: React.ReactNode }) {
   return (
     <div
       className="flex min-h-[100dvh] items-center justify-center px-4 relative overflow-hidden"
@@ -106,13 +106,38 @@ function SignInPage() {
     >
       <div className="absolute inset-0 bg-black/20" />
       <div className="relative z-10 w-full max-w-md">
-        <SignIn
-          routing="path"
-          path={`${basePath}/sign-in`}
-          signUpUrl={`${basePath}/sign-in`}
-        />
+        <ClerkLoading>
+          <div className="flex items-center justify-center py-20">
+            <div className="w-10 h-10 border-4 border-white/30 border-t-white rounded-full animate-spin" />
+          </div>
+        </ClerkLoading>
+        <ClerkLoaded>{children}</ClerkLoaded>
       </div>
     </div>
+  );
+}
+
+function SignInPage() {
+  return (
+    <AuthPageShell>
+      <SignIn
+        routing="path"
+        path={`${basePath}/sign-in`}
+        signUpUrl={`${basePath}/sign-up`}
+      />
+    </AuthPageShell>
+  );
+}
+
+function SignUpPage() {
+  return (
+    <AuthPageShell>
+      <SignUp
+        routing="path"
+        path={`${basePath}/sign-up`}
+        signInUrl={`${basePath}/sign-in`}
+      />
+    </AuthPageShell>
   );
 }
 
@@ -125,7 +150,7 @@ function ClerkProviderWithRoutes() {
       proxyUrl={clerkProxyUrl}
       appearance={clerkAppearance}
       signInUrl={`${basePath}/sign-in`}
-      signUpUrl={`${basePath}/sign-in`}
+      signUpUrl={`${basePath}/sign-up`}
       afterSignOutUrl={`${basePath}/`}
       localization={{
         signIn: {
@@ -150,6 +175,7 @@ function ClerkProviderWithRoutes() {
           <Switch>
             <Route path="/" component={Home} />
             <Route path="/sign-in/*?" component={SignInPage} />
+            <Route path="/sign-up/*?" component={SignUpPage} />
             <Route component={NotFound} />
           </Switch>
           <Toaster />
