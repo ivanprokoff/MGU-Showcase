@@ -46,9 +46,10 @@ interface SortableWidgetCardProps {
   onEdit: (w: Widget) => void;
   onDelete: (w: Widget) => void;
   onPin: (w: Widget) => void;
+  isAdmin?: boolean;
 }
 
-function SortableWidgetCard({ widget, dragOccurred, onEdit, onDelete, onPin }: SortableWidgetCardProps) {
+function SortableWidgetCard({ widget, dragOccurred, onEdit, onDelete, onPin, isAdmin }: SortableWidgetCardProps) {
   const {
     attributes,
     listeners,
@@ -114,32 +115,63 @@ function SortableWidgetCard({ widget, dragOccurred, onEdit, onDelete, onPin }: S
         className="block cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-xl sm:rounded-2xl"
       >
         <Card className="rounded-xl sm:rounded-2xl border border-border/50 shadow-sm hover:shadow-md hover:border-primary/30 transition-all duration-300 h-28 sm:h-32 bg-card/80 backdrop-blur-sm hover:-translate-y-1 relative overflow-hidden flex flex-col">
-          {/* Drag handle — hidden visually, functionality preserved */}
+          {/* Drag handle — admin only */}
           <div
             {...attributes}
             {...listeners}
             onClick={(e) => e.preventDefault()}
-            className="sr-only"
+            className={isAdmin ? "absolute top-2 left-2 z-20 cursor-grab active:cursor-grabbing text-muted-foreground/40 hover:text-muted-foreground transition-colors p-1" : "sr-only"}
+            aria-label="Перетащить"
           >
             <GripVertical className="h-4 w-4" />
           </div>
 
-          {/* Pin button — hidden visually, functionality preserved */}
-          <Button
-            size="icon"
-            variant="ghost"
-            data-testid={`button-pin-widget-${widget.id}`}
-            className="sr-only"
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              onPin(widget);
-            }}
-            title={widget.pinned ? "Открепить" : "Закрепить"}
-          >
-            {widget.pinned ? <PinOff className="h-3.5 w-3.5 sm:h-4 sm:w-4" /> : <Pin className="h-3.5 w-3.5 sm:h-4 sm:w-4" />}
-            <span className="sr-only">{widget.pinned ? "Открепить" : "Закрепить"}</span>
-          </Button>
+          {/* Admin controls: pin, edit, delete */}
+          {isAdmin && (
+            <div className="absolute top-2 right-2 z-20 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+              <Button
+                size="icon"
+                variant="ghost"
+                data-testid={`button-pin-widget-${widget.id}`}
+                className="h-7 w-7 text-muted-foreground hover:text-amber-500"
+                onClick={(e) => { e.preventDefault(); e.stopPropagation(); onPin(widget); }}
+                title={widget.pinned ? "Открепить" : "Закрепить"}
+              >
+                {widget.pinned ? <PinOff className="h-3.5 w-3.5" /> : <Pin className="h-3.5 w-3.5" />}
+              </Button>
+              <Button
+                size="icon"
+                variant="ghost"
+                className="h-7 w-7 text-muted-foreground hover:text-primary"
+                onClick={(e) => { e.preventDefault(); e.stopPropagation(); onEdit(widget); }}
+                title="Редактировать"
+              >
+                <Pencil className="h-3.5 w-3.5" />
+              </Button>
+              <Button
+                size="icon"
+                variant="ghost"
+                className="h-7 w-7 text-muted-foreground hover:text-destructive"
+                onClick={(e) => { e.preventDefault(); e.stopPropagation(); onDelete(widget); }}
+                title="Удалить"
+              >
+                <Trash2 className="h-3.5 w-3.5" />
+              </Button>
+            </div>
+          )}
+
+          {/* Hidden pin button for non-admin (keeps functionality accessible) */}
+          {!isAdmin && (
+            <Button
+              size="icon"
+              variant="ghost"
+              data-testid={`button-pin-widget-${widget.id}`}
+              className="sr-only"
+              onClick={(e) => { e.preventDefault(); e.stopPropagation(); onPin(widget); }}
+            >
+              <span className="sr-only">{widget.pinned ? "Открепить" : "Закрепить"}</span>
+            </Button>
+          )}
 
           <CardContent className="p-4 sm:p-6 flex-1 flex items-center">
             <div className="flex gap-3 sm:gap-4 items-center w-full">
@@ -174,6 +206,7 @@ export default function Home() {
   const { canInstall, install } = usePWAInstall();
   const { isSignedIn, user } = useUser();
   const { signOut } = useClerk();
+  const isAdmin = isSignedIn && user?.primaryEmailAddress?.emailAddress === "petrovea.oskit@gmail.com";
   const [, setLocation] = useLocation();
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -402,6 +435,15 @@ export default function Home() {
             Топ услуг
           </h2>
           <div className="hidden sm:flex gap-2">
+            {isAdmin && (
+              <Button
+                onClick={() => { setSelectedWidget(undefined); setFormOpen(true); }}
+                className="rounded-full shadow-sm hover:shadow-md transition-all gap-2"
+              >
+                <Plus className="h-4 w-4" />
+                Добавить виджет
+              </Button>
+            )}
             {canInstall && (
               <Button
                 variant="outline"
@@ -473,6 +515,7 @@ export default function Home() {
                           onEdit={(w) => { setSelectedWidget(w); setFormOpen(true); }}
                           onDelete={(w) => { setSelectedWidget(w); setDeleteOpen(true); }}
                           onPin={handlePin}
+                          isAdmin={isAdmin}
                         />
                       ))}
                     </div>
@@ -505,6 +548,7 @@ export default function Home() {
                           onEdit={(w) => { setSelectedWidget(w); setFormOpen(true); }}
                           onDelete={(w) => { setSelectedWidget(w); setDeleteOpen(true); }}
                           onPin={handlePin}
+                          isAdmin={isAdmin}
                         />
                       ))}
                     </div>
