@@ -30,10 +30,12 @@ if (!basePath) {
 // In production, derive the Clerk proxy URL from REPLIT_DOMAINS so the static
 // build knows where to forward Clerk FAPI requests. In dev, leave it empty —
 // Clerk talks directly to its FAPI using the test key.
-const clerkProxyUrl =
-  process.env.NODE_ENV === "production" && process.env.REPLIT_DOMAINS
-    ? `https://${process.env.REPLIT_DOMAINS.split(",")[0].trim()}/api/__clerk`
-    : process.env.VITE_CLERK_PROXY_URL ?? "";
+// NOTE: must assign to process.env so Vite picks it up through its own VITE_*
+// env-var pipeline — using `define` for import.meta.env.* conflicts with that pipeline.
+if (process.env.NODE_ENV === "production" && process.env.REPLIT_DOMAINS && !process.env.VITE_CLERK_PROXY_URL) {
+  const firstDomain = process.env.REPLIT_DOMAINS.split(",")[0].trim();
+  process.env.VITE_CLERK_PROXY_URL = `https://${firstDomain}/api/__clerk`;
+}
 
 export default defineConfig({
   base: basePath,
@@ -79,9 +81,6 @@ export default defineConfig({
         ]
       : []),
   ],
-  define: {
-    "import.meta.env.VITE_CLERK_PROXY_URL": JSON.stringify(clerkProxyUrl),
-  },
   resolve: {
     alias: {
       "@": path.resolve(import.meta.dirname, "src"),

@@ -1,0 +1,1 @@
+- [Clerk proxy URL in Vite production builds](clerk-vite-proxy-url.md) — assign to process.env.VITE_CLERK_PROXY_URL before defineConfig; never use define for import.meta.env.* keys.

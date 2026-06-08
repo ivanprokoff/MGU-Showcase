@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { ClerkProvider, SignIn, SignUp, ClerkLoading, ClerkLoaded, useClerk } from "@clerk/react";
+import { ClerkProvider, SignIn, SignUp, useClerk } from "@clerk/react";
 import { publishableKeyFromHost } from "@clerk/react/internal";
 import { shadcn } from "@clerk/themes";
 import { Switch, Route, useLocation, Router as WouterRouter } from "wouter";
@@ -98,7 +98,7 @@ function ClerkQueryClientCacheInvalidator() {
   return null;
 }
 
-function AuthPageShell({ children }: { children: React.ReactNode }) {
+function SignInPage() {
   return (
     <div
       className="flex min-h-[100dvh] items-center justify-center px-4 relative overflow-hidden"
@@ -106,38 +106,31 @@ function AuthPageShell({ children }: { children: React.ReactNode }) {
     >
       <div className="absolute inset-0 bg-black/20" />
       <div className="relative z-10 w-full max-w-md">
-        <ClerkLoading>
-          <div className="flex items-center justify-center py-20">
-            <div className="w-10 h-10 border-4 border-white/30 border-t-white rounded-full animate-spin" />
-          </div>
-        </ClerkLoading>
-        <ClerkLoaded>{children}</ClerkLoaded>
+        <SignIn
+          routing="path"
+          path={`${basePath}/sign-in`}
+          signUpUrl={`${basePath}/sign-up`}
+        />
       </div>
     </div>
   );
 }
 
-function SignInPage() {
-  return (
-    <AuthPageShell>
-      <SignIn
-        routing="path"
-        path={`${basePath}/sign-in`}
-        signUpUrl={`${basePath}/sign-up`}
-      />
-    </AuthPageShell>
-  );
-}
-
 function SignUpPage() {
   return (
-    <AuthPageShell>
-      <SignUp
-        routing="path"
-        path={`${basePath}/sign-up`}
-        signInUrl={`${basePath}/sign-in`}
-      />
-    </AuthPageShell>
+    <div
+      className="flex min-h-[100dvh] items-center justify-center px-4 relative overflow-hidden"
+      style={{ background: "linear-gradient(135deg, #0a1628 0%, #1e3a5f 50%, #1e4db7 100%)" }}
+    >
+      <div className="absolute inset-0 bg-black/20" />
+      <div className="relative z-10 w-full max-w-md">
+        <SignUp
+          routing="path"
+          path={`${basePath}/sign-up`}
+          signInUrl={`${basePath}/sign-in`}
+        />
+      </div>
+    </div>
   );
 }
 
