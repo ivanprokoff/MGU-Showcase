@@ -70,7 +70,14 @@ export function clerkProxyMiddleware(): RequestHandler {
       path.replace(new RegExp(`^${CLERK_PROXY_PATH}`), ""),
     on: {
       proxyReq: (proxyReq, req) => {
-        const protocol = req.headers["x-forwarded-proto"] || "https";
+        // x-forwarded-proto can be a comma-separated list when there are
+        // multiple proxy hops (e.g. "https, http"). Take only the first
+        // (leftmost = original client-facing) value, same as getClerkProxyHost.
+        const rawProto = req.headers["x-forwarded-proto"];
+        const protocol =
+          (Array.isArray(rawProto)
+            ? rawProto[0]
+            : rawProto?.split(",")[0]?.trim()) || "https";
         const host = getClerkProxyHost(req) || "";
         const proxyUrl = `${protocol}://${host}${CLERK_PROXY_PATH}`;
 
